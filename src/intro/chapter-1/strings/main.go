@@ -11,10 +11,10 @@ func main() {
 	fmt.Println(string('A'))
 	fmt.Println(string(45)) // a dash symbol '--' is printed instead --> this is in ASCII --> ASCII to string
 
-	fmt.Println(strconv.Itoa(45)) // integer to alpha
+	fmt.Println(strconv.Itoa(45)) // integer to ascii
 	
 	j, err:= strconv.Atoi("37") 
-	// alpha to integer --> the function returns 2 values (j, err) --> without err there is compiler issue
+	// ascii to integer --> the function returns 2 values (j, err) --> without err there is compiler issue
 	// for .Atoi() 
 	// "[#]" e.g. "37" is correct syntax and would print 37
 	// "[string]" e.g. "hi" is incorrect syntax and would cause err to return non-nil --> parsing would fail here

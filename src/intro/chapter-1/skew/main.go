@@ -126,6 +126,10 @@ func main() {
 	//I am going to make a plot, a Skew Plot
 	//--> get pre-written code for this purpose
 
+	//draw the skew diagram
+	MakeSkewDiagram(EcoliSkewArray)
+
+	fmt.Println("Skew diagram draw! Exiting normally.")
 }
 
 // MakeSkewDiagram
@@ -165,6 +169,13 @@ func MakeSkewDiagram(skewArray []int) {
 
 	//first, set a unit of length
 	unitOfLength := vg.Centimeter
+
+	//make label fonts bigger
+	p.X.Label.TextStyle.Font.Size = 3 * unitOfLength
+	p.Y.Label.TextStyle.Font.Size = 3 * unitOfLength
+	p.Title.TextStyle.Font.Size = 4 * unitOfLength
+	p.X.Tick.Label.Font.Size = 2 * unitOfLength
+	p.Y.Tick.Label.Font.Size = 2 * unitOfLength
 
 	//save my plot to a PNG
 	err = p.Save(100*unitOfLength, 60*unitOfLength, "skewDiagram.png") // w * h

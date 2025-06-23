@@ -9,7 +9,8 @@ import (
 func main() {
 	fmt.Println("Welcome to Problem Set 2")
 
-	fmt.Println(generateNumberInRange(4, 5))
+	a := []int{1, 2, 3, 4, -1000000, -1000000, -1000000}
+	fmt.Println(ComputePeriodLength(a))
 }
 
 // 2.1
@@ -106,4 +107,151 @@ func pairIsPrime(lowerBound, upperBound int) bool {
 func generateNumberInRange(lowerBound, upperBound int) int {
 	x := rand.Intn(upperBound + 1 - lowerBound)
 	return lowerBound + x
+}
+
+//6.3
+
+func HasRepeat(a []int) bool {
+	index := make(map[int]bool)
+	for _, value := range a {
+		if index[value] {
+			return true
+		}
+		index[value] = true
+	}
+
+	return false
+}
+
+func SimulateOneBirthdayTrial(numPeople int) bool {
+	return HasRepeat(generateBirthdays(numPeople))
+}
+
+func generateBirthdays(numPeople int) []int {
+	birthdays := make([]int, numPeople)
+
+	for i := 0; i < numPeople; i++ {
+		birthdays[i] = rand.Intn(366)
+	}
+
+	return birthdays
+}
+
+func SharedBirthdayProbability(numPeople, numTrials int) float64 {
+
+	sharesBirthday := 0
+	for i := 0; i < numTrials; i++ {
+		if SimulateOneBirthdayTrial(numPeople) {
+			sharesBirthday++
+		}
+	}
+
+	return float64(sharesBirthday) / float64(numTrials)
+
+}
+
+//6.4 In a state of sin with the middle-square PRNG
+
+func CountNumDigits(x int) int {
+	if x == 0 {
+		return 1
+	}
+
+	if x < 0 {
+		x *= -1
+	}
+
+	i := 0
+	for x != 0 {
+		x /= 10
+		i++
+	}
+
+	return i
+}
+
+func SquareMiddle(x, numDigits int) int {
+	if numDigits%2 != 0 || x < 0 || numDigits <= 0 || CountNumDigits(x) > numDigits {
+		return -1
+	}
+	border := numDigits / 2
+
+	//square x
+	x *= x
+
+	length := CountNumDigits(x)
+	zeroes := 0
+	if length < numDigits*2 {
+		zeroes = numDigits*2 - length
+	}
+	x = x % Pow10(length-(border-zeroes))
+
+	x /= Pow10(border)
+
+	return x
+}
+
+func Pow10(a int) int {
+	result := 1
+	for i := 0; i < a; i++ {
+		result *= 10
+	}
+	return result
+}
+
+/*
+	GenerateMiddleSquareSequence(seed, numDigits)
+    seq ← array of length 1
+    seq[0] ← seed
+    while HasRepeat(seq) is false
+        seed ← SquareMiddle(seed, numDigits)
+        seq ← append(seq, seed)
+    return seq
+*/
+
+func GenerateMiddleSquareSequence(seed, numDigits int) []int { // I did it but by this point I have no idea what was going on..
+	sequence := make([]int, 1)
+	sequence[0] = seed
+
+	for !HasRepeat(sequence) {
+		seed = SquareMiddle(seed, numDigits)
+		sequence = append(sequence, seed)
+	}
+
+	return sequence
+}
+
+func ComputePeriodLength(a []int) int {
+
+	index := make(map[int]int)
+	difference := 0
+	if HasRepeat(a) {
+		for i, value := range a {
+			if index[value] != 0 {
+				difference = i - index[value]
+			}
+			index[value] = i
+		}
+	}
+
+	return difference
+} //storing a map to an int where the value of the array is the key and the index of the array is value to the map is pretty cool!
+
+//Another PRNG --> Linear congruential generators
+
+// y = Remainder(a*x + c, m)
+// y = (a*x + c)%m
+
+func GenerateLinearCongruenceSequence(seed, a, c, m int) []int {
+	sequence := make([]int, 1)
+
+	sequence[0] = seed
+
+	i := 1
+	for !HasRepeat(sequence) {
+		sequence = append(sequence, (a*sequence[i-1]+c)%m)
+		i++
+	}
+
+	return sequence
 }

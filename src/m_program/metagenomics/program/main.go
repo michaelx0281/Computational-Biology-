@@ -8,6 +8,7 @@ func main() {
 	fmt.Println("Metagenomics.")
 
 	a := Make2D_2[string](2, 2)
+	c := Make2D[int](2, 2)
 
 	a[0][0] = "abcd"
 	a[0][1] = "efgd"
@@ -17,6 +18,7 @@ func main() {
 	b := []string{"a", "b", "c"}
 
 	fmt.Println(a, b)
+	fmt.Println(c)
 
 	//very so duper cool demonstration thingy --> I am so amazing guys!!
 	//I totally did not learn this on stack overflow

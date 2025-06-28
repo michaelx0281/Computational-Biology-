@@ -43,6 +43,16 @@ func BetaDiversityMatrix(allMaps map[string](map[string]int), distanceMetric str
 
 	matrix = Make2D_2[float64](len(samples), len(samples))
 
+	for i := 0; i < len(samples); i++ {
+		for j := 0; j < len(samples); j++ {
+			if distanceMetric == "Jaccard" {
+				matrix[i][j] = JaccardDistance(allMaps[samples[i]], allMaps[samples[j]])
+			} else {
+				matrix[i][j] = BrayCurtisDistance(allMaps[samples[i]], allMaps[samples[j]])
+			}
+		}
+	} // surprisingly, this is the end to everything here!
+
 	return samples, matrix
 }
 
@@ -65,4 +75,4 @@ func Make2D_2[T any](n, m int) [][]T {
 	return matrix
 }
 
-//code challenge: --> turn rangeInt() into a generic type method that ranges to a length of int n with an optional body that takes in what is to be done within the body (I am not sure if this is actually possible, but this seems pretty fun)
+//code challenge: --> turn rangeInt() into a generic type method that ranges  to a length of int n with an optional body that takes in what is to be done within the body (I am not sure if this is actually possible, but this seems pretty fun)

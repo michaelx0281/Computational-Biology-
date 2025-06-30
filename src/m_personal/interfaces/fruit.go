@@ -1,7 +1,7 @@
 package main
 
 type Fruit interface {
-	color() string
+	getColor() string
 	isTetoPear() bool
-	taste() string
+	getTaste() string
 }

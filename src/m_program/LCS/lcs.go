@@ -25,8 +25,31 @@ I am borrowing these notions from neuroscience signalling during development in 
 func LCSPaths(str1, str2 string, i, j int) int {
 	matrix := LCSMatrix(str1, str2)
 
+	fakeDMatrix := matrix
+	fakeFMatrix := matrix
+
 	dMatrix := Make2D_2[bool](len(matrix), len(matrix[0]))
 	fMatrix := Make2D_2[bool](len(matrix), len(matrix[0]))
+
+	dMatrix = DeadEnd(dMatrix, Pair{i: 0, j: 0})()
+	for i := range dMatrix {
+		for j := range dMatrix[0] {
+			if dMatrix[i][j] == true {
+				fakeDMatrix[i][j] = -1
+			}
+		}
+		fmt.Println()
+	}
+	fMatrix = Fasciculate(fMatrix, Pair{i: 0, j: 0})()
+
+	for i := range fMatrix {
+		for j := range fMatrix[0] {
+			if fMatrix[i][j] == true {
+				fakeFMatrix[i][j] = -1
+			}
+		}
+		fmt.Println()
+	}
 
 	//BaseCase(s)
 	//if at the source, return 1
@@ -38,18 +61,26 @@ func LCSPaths(str1, str2 string, i, j int) int {
 		return 0
 	}
 
+	if i == 0 || j == 0 {
+		return 1
+	}
+
+	fmt.Println("Done1")
+
 	// first step: find out if the piece diagonally up has a smaller numerical value
 	if matrix[i-1][j-1] < matrix[i][j] {
+		fmt.Println("Done3")
 		paths := LCSPaths(str1, str2, i-1, j-1)
+		fmt.Println("Done2")
 
 		// if condition is fufilled, temporary matrix and recording matrix both filled
 		if paths == 0 {
 			dMatrix[i][j] = true
-			DeadEnd(dMatrix, Pair{i: i, j: j}) //there may be some redundancy here
+			dMatrix = DeadEnd(dMatrix, Pair{i: i, j: j})() //there may be some redundancy here
 		}
 		if paths > 0 {
 			fMatrix[i][j] = true
-			Fasciculate(fMatrix, Pair{i: i, j: j})
+			fMatrix = Fasciculate(fMatrix, Pair{i: i, j: j})()
 		}
 
 		return paths
@@ -60,14 +91,18 @@ func LCSPaths(str1, str2 string, i, j int) int {
 
 		if upPaths == 0 {
 			dMatrix[i][j] = true
+			dMatrix = DeadEnd(dMatrix, Pair{i: i, j: j})()
 		} else if rightPaths == 0 {
 			dMatrix[i][j] = true
+			dMatrix = DeadEnd(dMatrix, Pair{i: i, j: j})()
 		}
 
 		if upPaths > 0 {
 			fMatrix[i][j] = true
+			fMatrix = Fasciculate(fMatrix, Pair{i: i, j: j})()
 		} else if rightPaths > 0 {
 			fMatrix[i][j] = true
+			fMatrix = Fasciculate(fMatrix, Pair{i: i, j: j})()
 		}
 
 		return upPaths + rightPaths
@@ -77,6 +112,9 @@ func LCSPaths(str1, str2 string, i, j int) int {
 
 	return 0
 }
+
+//backtracking pointers
+//finding LCS in general
 
 // func (p Pair) getI() int{
 // 	return p.i
@@ -158,3 +196,10 @@ func LCSMatrix(str1, str2 string) [][]int {
 
 	return matrix
 }
+
+/*
+The edit distance is the minimum number of mismatches, deletions, and insertions that are needed.
+This measures how good the alignment is. What is the fewest number of changes that it takes to go from one string to the other?
+
+Minimizing the number of mismatches is a completely different problem!
+*/

@@ -17,4 +17,7 @@ func main() {
 	// 	matrix[1][2] = 12
 
 	// 	fmt.Println("Matrix hi", matrix)
+
+	//every time that you backtrack diagonally, add to an index!
+	fmt.Println(LCSPaths("ATCGTCC", "ATGTTATA", 7, 8))
 }

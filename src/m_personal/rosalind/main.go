@@ -1,23 +1,25 @@
 package main
 
-import (
-	"fmt"
-	"os"
-)
+//"fmt"
+// "os"
 
 func main() {
 
-	s, err := os.ReadFile("sequences/acgt.txt")
-	check(err)
+	// s, err := os.ReadFile("sequences/acgt.txt")
+	// check(err)
 
-	//something that I should do is download the text file version of this and utilize 'os' to read that specific text file instead of just dumping it here!
-	fmt.Println(ACGTCount(string(s)))
+	// //something that I should do is download the text file version of this and utilize 'os' to read that specific text file instead of just dumping it here!
+	// fmt.Println(ACGTCount(string(s)))
 
-	x, err2 := os.ReadFile("sequences/transcribe.txt")
-	check(err2)
+	// x, err2 := os.ReadFile("sequences/transcribe.txt")
+	// check(err2)
 
-	fmt.Println(Transcribe(string(x)))
-	fmt.Println(ReverseComplement("AGTAAGCAGAGCCCGTAGCA"))
+	// fmt.Println(Transcribe(string(x)))
+
+	// y, err3 := os.ReadFile("sequences/reverse_comp.txt")
+	// check(err3)
+	// fmt.Println(ReverseComplement(string(y)))
+	// fmt.Println(WascallyWabbits(5, 3))
 }
 
 func ACGTCount(s string) (int, int, int, int) {
@@ -98,4 +100,40 @@ func Reverse(sequence string) string {
 	}
 
 	return string(reversed)
+}
+
+// func WascallyWabbits(n, k int) int {
+// 	pairs := MakeMatrix(0, 2)
+
+// 	if n == 1 {
+// 		return 1
+// 	} else {
+// 		pairs[0][0] = 1
+// 		for i := 1; i < n; i++ {
+// 			pairs[0] = append(pairs[0], pairs[i-1][0])
+// 			pairs[1] = append(pairs[1], pairs[i-1][0]*k)
+// 		}
+// 	}
+
+// 	// rabbitPairs = func() int {
+// 	// 	count := 0
+// 	// 	for _, val := range pairs {
+// 	// 		count += val
+// 	// 	}
+
+// 	// 	return count
+// 	// }()
+
+// 	// return rabbitPairs
+
+// 	// return pairs[n-1]
+// }
+
+func MakeMatrix(x, y int) [][]int {
+	matrix := make([][]int, x)
+
+	for i := range matrix {
+		matrix[i] = make([]int, y)
+	}
+	return matrix
 }

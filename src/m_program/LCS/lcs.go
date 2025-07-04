@@ -382,46 +382,9 @@ Differences in Hemoglobin
 - Hemoglobin dual function?
 - N - binding? O2 not separated from one another (differences in circulation)
 
-*/
 
-/*
-Extras!
+For the case of the sars spike protein, there is a lot more limit in terms of space. This necesitates a change in the weights :)
 
-Introduction to Multiple Alignment
-Progressive Alignment
-Scoring Multiple Alignments
-Partial Order Alignment
-A-Bruijn Approach to Multiple Alignment
 
-Up until THIS POINT we have only tried to align TWO sequences
-
-What about aligning more than two?
-
-There is more significance once a pattern between two sequences appears in many others.
-
-Multiple alignments can reveal subtle similarities that pairwise alignments do not reveal.
-
-Alignment of 2 sequences is represented as a 2-row matrix. In a similar way, we represent alignment of 3 sequences as 3-row matrix
-
-A T - G C G -
-A - C G T - A
-A T C A C _ A
-
-Our scoring function should score alignments with conserved columns higher.
-
-Three sequences to align: ATGC, AATC, ATGC
-
-The coordinates should be plotted in a 3D space!
-
-The same strategy could be applied as the one aligning two sequences.
-
-A 3-D Manhattan Cube with each axis represeting a sequence to align
-
-For global alignments --> source to sink
-
-2D Alignment Cell versus a 3D Alignment Cell
-
-There are 3 edges in each unit square (2D)
-There are 7 edges in each unit cube (3D)
 
 */

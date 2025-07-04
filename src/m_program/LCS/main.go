@@ -3,21 +3,13 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println(LCSLength("GCAT", "GTAT"))
-	// fmt.Println("Matrix", Make2D_2[int](3, 6))
+	fmt.Println("Adapted to a general alignment section.")
 
-	// 	matrix := Make2D_2[int](5, 3)
+	str1 := "ATCGA"
+	str2 := "ATGGA"
+	profile := makeProfile(str1, str2)
 
-	// 	matrix[0][0] = 1
-	// 	matrix[0][1] = 2
-	// 	matrix[0][2] = 3
+	c_seq := profile.ConsesusSequence()
 
-	// 	matrix[1][0] = 10
-	// 	matrix[1][1] = 11
-	// 	matrix[1][2] = 12
-
-	// 	fmt.Println("Matrix hi", matrix)
-
-	//every time that you backtrack diagonally, add to an index!
-	fmt.Println(LCSPaths("ATCGTCC", "ATGTTATA", 7, 8))
+	fmt.Println(c_seq)
 }

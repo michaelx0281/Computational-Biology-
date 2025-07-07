@@ -149,12 +149,22 @@ func DeadEnd(matrix [][]bool, p ...Pair) func() [][]bool {
 }
 
 // Input: indices i and j which you want to find --> input the sink
-// Output: longest (int terms of weight) path
+// Output: longest (int terms of weight) paths
 
 func Make2D_2[T any](n, m int) [][]T {
 	matrix := make([][]T, n)
 	for i := 0; i < n; i++ {
 		matrix[i] = make([]T, m)
+	}
+
+	return matrix
+}
+
+func Make3D[T any](n int, m [][]float64) [][][]T {
+	matrix := make([][][]T, n)
+
+	for i := 0; i < n; i++ {
+		matrix[i] = Make2D_2[T](len(m), len(m[0]))
 	}
 
 	return matrix
@@ -386,5 +396,245 @@ Differences in Hemoglobin
 For the case of the sars spike protein, there is a lot more limit in terms of space. This necesitates a change in the weights :)
 
 
+
+*/
+
+// Insert your GlobalAlignment() function here, along with any subroutines that you need. Please note the subroutines indicated in the problem description that are provided for you.
+func GlobalAlignment(str1, str2 string, match, mismatch, gap float64) Alignment {
+	var alignment Alignment
+	mtx := GlobalScoreTable(str1, str2, match, mismatch, gap)
+
+	// create the first indicies based on the length of the two strings
+	row := len(str1)
+	col := len(str2)
+
+	// loop until you hit the left or top edge
+	for row != 0 || col != 0 {
+		// find the values up, left, and diagonal from the current index
+		left := -1000.0
+		if InMatrix(mtx, row, col-1) {
+			left = mtx[row][col-1] - gap
+		}
+
+		up := -1000.0
+		if InMatrix(mtx, row-1, col) {
+			up = mtx[row-1][col] - gap
+		}
+
+		diag := -1000.0
+		if InMatrix(mtx, row-1, col-1) {
+			diag = mtx[row-1][col-1]
+			if str1[row-1] == str2[col-1] {
+				diag += match
+			} else {
+				diag -= mismatch
+			}
+		}
+
+		// if there's a match use it! Otherwise go up or left if they are the same
+		if diag == mtx[row][col] {
+			alignment[0] = string(str1[row-1]) + alignment[0]
+			alignment[1] = string(str2[col-1]) + alignment[1]
+			row--
+			col--
+		} else if up == mtx[row][col] {
+			alignment[0] = string(str1[row-1]) + alignment[0]
+			alignment[1] = "-" + alignment[1]
+			row--
+		} else if left == mtx[row][col] {
+			alignment[0] = "-" + alignment[0]
+			alignment[1] = string(str2[col-1]) + alignment[1]
+			col--
+		}
+
+	}
+	return alignment
+}
+
+func InMatrix(matrix [][]float64, row int, col int) bool {
+	if row < 0 || col < 0 {
+		return false
+	}
+	if row >= len(matrix) {
+		return false
+	}
+	if col >= len(matrix[row]) {
+		return false
+	}
+	return true
+}
+
+func LocalScoreTable(str1, str2 string, match, mismatch, gap float64) [][]float64 {
+
+	matrix := Make2D_2[float64](len(str1)+1, len(str2)+1) //str1 is the col indicies, and str2 is the row indicies
+
+	//fmt.Println("LCS Matrix", matrix)
+
+	// for each cell in the matrix, check first if the two letters are equal to eachother, then add one to
+	// the value of the cell, if they are not the same, then take the bigger of the two adjacent cells
+
+	//i is the col
+	//j is the row
+
+	for i := 1; i < len(str1)+1; i++ {
+		for j := 1; j < len(str2)+1; j++ {
+			if str1[i-1] == str2[j-1] {
+				//this checked of there is an alignment match
+				matrix[i][j] = matrix[i-1][j-1] + match
+				continue
+			}
+			//this is the second case which takes the largest of the two previous
+			matrix[i][j] = max(matrix[i][j-1]-gap, matrix[i-1][j]-gap, matrix[i-1][j-1]-mismatch)
+
+			if matrix[i][j] < 0 {
+				matrix[i][j] = 0
+			}
+
+		}
+		//fmt.Println(matrix[i])
+	}
+
+	return matrix
+}
+
+func LocalAlignment(str1, str2 string, match, mismatch, gap float64) (Alignment, int, int, int, int) {
+	var alignment Alignment
+	mtx := LocalScoreTable(str1, str2, match, mismatch, gap)
+
+	// create the first indicies based on the length of the two strings
+	max_val := 0.0
+	row := 0
+	col := 0
+
+	for i := 1; i <= len(str1); i++ {
+		for j := 1; j <= len(str2); j++ {
+			if mtx[i][j] > max_val {
+				row = i
+				col = j
+				max_val = mtx[i][j]
+			}
+		}
+	}
+
+	endStr1 := row
+	endStr2 := col
+
+	// loop until you hit the left or top edge
+	for mtx[row][col] > 0 {
+		// find the values up, left, and diagonal from the current index
+		left := -1000.0
+		if InMatrix(mtx, row, col-1) {
+			left = mtx[row][col-1] - gap
+		}
+
+		up := -1000.0
+		if InMatrix(mtx, row-1, col) {
+			up = mtx[row-1][col] - gap
+		}
+
+		diag := -1000.0
+		if InMatrix(mtx, row-1, col-1) {
+			diag = mtx[row-1][col-1]
+			if str1[row-1] == str2[col-1] {
+				diag += match
+			} else {
+				diag -= mismatch
+			}
+		}
+
+		// if there's a match use it! Otherwise go up or left if they are the same
+		if diag == mtx[row][col] {
+			alignment[0] = string(str1[row-1]) + alignment[0]
+			alignment[1] = string(str2[col-1]) + alignment[1]
+			row--
+			col--
+		} else if up == mtx[row][col] {
+			alignment[0] = string(str1[row-1]) + alignment[0]
+			alignment[1] = "-" + alignment[1]
+			row--
+		} else if left == mtx[row][col] {
+			alignment[0] = "-" + alignment[0]
+			alignment[1] = string(str2[col-1]) + alignment[1]
+			col--
+		}
+
+	}
+	return alignment, row, endStr1, col, endStr2
+}
+
+//look into fitting alignment and overlapping alignment
+
+//monte carlo simulation to find best parameters for given situation?
+/*
+What does it mean for a parameter to be good? I would get the sequence that is available with the least amount of gaps possible
+--> have a separate overall ranking for this!
+
+change the parameters to find the best results!
+
+in practice, there are 20-30+ parameters
+
+start with data that you know, how often does it find that specific region? --> classification in a sense
+
+Scoring matrix; penalizes different matches / mismatches differently
+
+BLOSUM62 Matrix --> very common and used in bioinformatics ``
+*/
+
+/*
+
+Why would you reward or penalize different pairs differently?
+
+--> classification usages --> if you are looking for specific concentration of a property of the Proteins / paremters aligned
+
+How did they come up with this?
+
+--> people were looking to find a specific property of these proteins
+
+--> have a ranking based on how well a specific protein would fit that property (clustering into groups)
+
+--> select scores + run
+
+How would this change our alignment?
+
+--> this is more focused and specific towards the selected properties / selective pressures
+
+--> its like a mini-evolution
+
+Can also sort for motifs and for bigger things too like folds and specific groups (steric and otherwise)
+
+My question is: Why does the BLOSUM62 matrix look like a simplex / triangle instead of a manhattan plot?
+
+Specific protein folding?
+
+Determinance of protein function due to mutation changes / others
+--> how similar proteins are
+
+How replacable a protein is? Weights? Each are parameters.
+
+if some mismatches are more common based on this matrix, don't penalize as much.const
+if they are less common, penalize them more.
+
+you can change the edge weights in order to change the network
+
+
+Affine penalty: a way of socring contiguous gaps higher than discontiguous gaps.const
+gap opening penalty --> less contiguous
+gap extension penalty --> more contiguous
+
+Alignment with affine gap penalties problem
+
+
+Add a huge number of new gaps that are longer?
+
+Divide the network into three layers
+-> gap => jump out of the middle layer
+
+3-layer manhattan plot
+
+if you have so many different layers, could you try to run different alignments on each layer?
+Do the three layer ones.const
+
+Multiple Alignment Problem
+	
 
 */

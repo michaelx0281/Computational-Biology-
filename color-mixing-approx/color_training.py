@@ -115,7 +115,7 @@ base_colors = np.array(
     ]
 )
 
-target = np.array([0.4, 0.7, 0.3])  # Example green
+target = np.array([0.608, 0.631, 0.647])  # Example green
 
 
 def loss(weights):

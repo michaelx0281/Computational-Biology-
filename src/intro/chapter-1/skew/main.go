@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"gonum.org/v1/plot"
+	"gonum.org/v1/plot" //fix this later --> originally had imports in source dir but now with modules is different
 	"gonum.org/v1/plot/plotter" // include line graph support and many other graphs
 	"gonum.org/v1/plot/vg"      // support for vector graphics and image generation
 )

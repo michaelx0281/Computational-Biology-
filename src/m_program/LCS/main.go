@@ -12,4 +12,14 @@ func main() {
 	c_seq := profile.ConsesusSequence()
 
 	fmt.Println(c_seq)
+
+	str3 := "ATCGG"
+
+	alignment, score := AlignSeqToProfile(str3, profile)
+	fmt.Println("Alignment:", alignment)
+	fmt.Println("Score:", score)
+
+	three_matrix := MultipleGlobleAlignmentScoreTable("ATCGA", "ATGGA", "ATCGG")
+
+	fmt.Println("Triple Alignment Score Table:", three_matrix)
 }

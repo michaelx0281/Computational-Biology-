@@ -49,6 +49,42 @@ This answers the question of 'Can an automaton's population grow *infinitely lar
 
 This question remained unsolvec until 1970, when Bill Gosper found teh following pattern named the Gosper glider gun
 
-There are about 2 components or parts which seem to coordinate to create endless amou9tns of glider's
+There are about 2 components or parts which seem to coordinate to create endless amounts of glider's
+
+However, this still does not quite reach the exponential self replication of real human cells, despite the increased number of interesting patterns which were discovered.
+
+Computional Biology Problem:
+
+Input: An initial configuration of the Game of Life board initialBoard, and an integer numGens
+
+Output: All numGens + 1 configurations of this board over numGens generations of the Game of Life, starting with initalBoard
+
+Always try to plan ahead before starting on the code!
+-------------
+
+We will explore the paradignm for solving computational problems that is called top-down programming. We will first write a function which solves the problem assuming any subroutines that we need are implemented correctly. We will then write each of these subroutines assuming any other functions they may call as subroutines in return.
+
+With this, we may start out initial planning by creating a function hierarchy or a network where functions are connected by what they invoke through the usage of arrows.
+
+Initial thoughts and ideas--
+CreateBoard:
+
+Update inputs:
+
+CreateNewBoard:
+
+Here is the pseudocode provided by the website!
+
+PlayGameOfLife(initialBoard, numGens)
+    boards ← array of numGens + 1 game boards
+    boards[0] ← initialBoard
+    for every integer i from 1 to numGens
+        boards[i] ← UpdateBoard(boards[i–1])
+    return boards
+
+This is essentially a more crystalized version of what my first thought for implementation of this was.const
+
+We can create a 2D array of bools which will signal which cells are alive or dead!
+
 
 */

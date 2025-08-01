@@ -1,0 +1,3 @@
+[submodule "CNN"]
+	path = CNN
+	url = https://github.com/michaelx0281/CNN

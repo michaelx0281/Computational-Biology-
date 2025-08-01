@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/michaelx0281/Computational-Biology/src/utils" //wow this was actually so annoying to figure out
 )
 
 func main() {
@@ -46,7 +48,7 @@ func PatternMatchingVibrioCholerae() {
 
 	genome, err := os.ReadFile("data/Vibrio_cholerae.txt")
 
-	checkError(err)
+	utils.CheckError(err)
 
 	//data is current a slice of bytes (byte[])
 
@@ -54,6 +56,6 @@ func PatternMatchingVibrioCholerae() {
 	dataList := PatternMatching(p, string(genome))
 
 	//Now, we just need to print it out and add spaces
-	PrintListSpaceSeparated(dataList) //once this works, let's write to a txt file instead!
+	utils.PrintListSpaceSeparated(dataList) //once this works, let's write to a txt file instead!
 
 }

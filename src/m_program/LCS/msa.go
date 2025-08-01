@@ -196,7 +196,9 @@ func TripleAlignment(str1, str2, str3 string) ThreeAlignment {
 			row--
 			col--
 			width--
-		} else if matrix[row-1][col-1][width] + float64(f_diagMatch)
+		} else if matrix[row-1][col-1][width] + float64(f_diagMatch) {
+			
+		}
 	}
 
 	return alignment

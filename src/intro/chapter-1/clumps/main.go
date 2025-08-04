@@ -5,7 +5,7 @@ import (
 	"io"       //needed to read from (and write to) files
 	"log"      //needed for log files (errors)
 	"net/http" //for accessing URLs
-	"time"
+	//"time"
 )
 
 func main() {
@@ -49,26 +49,26 @@ func main() {
 	//we now have a slice of symbols associated with the genome]
 
 	fmt.Println("The number of nucleotides in E. coli genome is", len(genomeSymbols))
-	//turn slice into string
+	// //turn slice into string
 	EcoliGenome := string(genomeSymbols)
 
 	k := 9 //the significant number --> frequently
 	L := 500
 	t := 3
 
-	clumps := FindClumps(EcoliGenome, k, L, t)
+	// clumps := FindClumps(EcoliGenome, k, L, t)
 
-	fmt.Println("Found", len(clumps), "total patterns occuring as clumps.")
+	// fmt.Println("Found", len(clumps), "total patterns occuring as clumps.")
 
-	start := time.Now()
-	FindClumps(EcoliGenome, k, L, t)
-	elapsed := time.Since(start)
-	log.Printf("FindClumps took %s", elapsed)
+	// start := time.Now()
+	// FindClumps(EcoliGenome, k, L, t)
+	// elapsed := time.Since(start)
+	// log.Printf("FindClumps took %s", elapsed)
 
-	start2 := time.Now()
+	// start2 := time.Now()
 	clumps2 := FindClumpsFaster(EcoliGenome, k, L, t)
-	elapsed2 := time.Since(start2)
-	log.Printf("FindClumpsFaster took %s", elapsed2)
+	// elapsed2 := time.Since(start2)
+	// log.Printf("FindClumpsFaster took %s", elapsed2)
 
 	fmt.Println("Found", len(clumps2), "total patterns occuring as clumps.")
 }

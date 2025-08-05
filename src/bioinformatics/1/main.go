@@ -31,7 +31,8 @@ func main() {
 	// data := []byte("BYE BYE!")
 	// utils.WriteBytesToTxTFile("/files/intro.txt", data)
 	// fmt.Println(utils.AddSpacesToString(string(data)))
-	WriteGCSkewFULL()
+	// WriteGCSkewFULL()
+	fmt.Println(ApproxMatching("CGATCGAGTACCATAAG", "ATA", 1))
 }
 
 //Take Vibrio cholerae genome from os and print list of starting indices of any matches in a space separated list

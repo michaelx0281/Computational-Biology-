@@ -47,7 +47,7 @@ func HandleErrorLog(e error, msg ...string) {
 
 func HandleFatalFileCreationError(e error, name, msg string) {
 	if e != nil {
-		log.Fatal("Encountered fatal error, could not write %v to file %s", e, name)
+		log.Fatalf("Encountered fatal error, could not write %v to file %s", e, name)
 	}
 }
 
@@ -109,13 +109,18 @@ func WriteBytesToTxTFile(name string, data []byte) {
 func WriteIntsToTxTFile(name string, data []int) {
 	//if you want to write to a folder, still need os.MkdirAll and os.Join in order to do that
 	fmt.Println("Length of data is", len(data))
+	fmt.Println("hi")
 	file, err := os.Create(name)
 
+	fmt.Println("hi2")
 	HandleFatalFileCreationError(err, name, "System was not able to create file. Check the input name string for formatting.")
+
+	defer file.Close() //maybe there were errors bc the file tried to close too soon?
 
 	fmt.Println("List before null byte list.", IntListToString(data))
 
 	fmt.Println("List which produced null byte error.", AddSpacesToString(IntListToString(data)))
+	fmt.Println("waoifejwoifjp")
 
 	data = StringToIntList(AddSpacesToString(IntListToString(data)))
 	bytesWritten, err3 := file.Write(IntListToByteList(data))
@@ -125,15 +130,21 @@ func WriteIntsToTxTFile(name string, data []int) {
 	fmt.Printf("%d bytes written to file %s", bytesWritten, name)
 }
 
-func IntListToString(list []int) string {
+func IntListToString(list []int) string { //run a different protocal that has an array of strings in this format str[n][2] and return errors otherwise
 	// making each index-element type casted into a byte does NOT work!
-	s := make([]byte, len(list))
+	s := make([]byte, len(list)) //seems like I would have to make a list of strings instead
+
+	// 1 => strconv to a ==> cast as byte = 49
+	// -1 => strcov to a ==> cast as byte = 45 49 (this is because there are two characters in '-1')
 
 	for i, element := range list {
 
 		stringedElement := strconv.Itoa(element)
-		fmt.Println(element)
+		fmt.Println(stringedElement)
+		// fmt.Println(element)
 		fmt.Println("Element:", stringedElement)
+		fmt.Println("The same thing but with 1", []byte(strconv.Itoa(1)))
+		fmt.Println("-", []byte(strconv.Itoa(-1)))
 		slice := []byte(stringedElement)
 
 		//check if one character
@@ -143,6 +154,7 @@ func IntListToString(list []int) string {
 		}
 		fmt.Println(slice[0])
 		fmt.Println(slice[1])
+
 		panic("Length element in list is not 1. String to byte conversion failed. Length of slice is " + strconv.Itoa((len(slice))))
 	}
 	return string(s)

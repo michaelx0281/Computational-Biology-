@@ -42,6 +42,8 @@ func SuffixRandomizedNeighbors(Pattern string, d int) []string {
 		}
 
 	}
+
+	return []string{}
 }
 
 //This one is the simplest one! Let's do it first!

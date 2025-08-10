@@ -1,64 +1,56 @@
 package main
 
-import "github.com/michaelx0281/Computational-Biology/src/utils"
+//I think that this Charging Station promopt is possibly one of the hardest / harder problems that I had to do!
 
-//Given a string, return the neighboor of it!
-func Neigbors(Pattern string, d int) []string {
-	neigborhood := make([]string, 0)
-	//There are two functions!
-	s := SuffixRandomizedNeighbors(Pattern, d)
-	p := PrefixRandomizedNeighbors(Pattern) //don't need to check d for this one. It will return everything hamming dist 1.
+//import "github.com/michaelx0281/Computational-Biology/src/utils"
 
-	//there needs to be more of a fix before this is done
-	return utils.RemoveDuplicatesFromArray(s + p)
-}
+/*
 
-func ReplaceLetter(pattern []byte, letter byte, index int) []byte {
-	pattern[index] = letter
-	return pattern
-}
+Neighbors(Pattern, d)
+    if d = 0
+        return {Pattern}
+    if |Pattern| = 1
+        return {A, C, G, T}
+    Neighborhood ← an empty set
+    SuffixNeighbors ← Neighbors(Suffix(Pattern), d)
+    for each string Text from SuffixNeighbors
+        if HammingDistance(Suffix(Pattern), Text) < d
+            for each nucleotide x
+                add x • Text to Neighborhood
+        else
+            add FirstSymbol(Pattern) • Text to Neighborhood
+    return Neighborhood
 
-//make this part a recursive function? //okay, this pattern is clearly not working right now / at this moment --> use the pseudocode from the website ot actually recurse instead of trying to do it dynamically
-func SuffixRandomizedNeighbors(Pattern string, d int) []string {
-	//convert pattern into list of bytes
-	pattern := make([]byte, len(Pattern))
-	neigbors := make([]string, 0)
+*/
 
-	for i, letter := range Pattern {
-		pattern[i] = byte(letter)
+func Neighbors(Pattern string, d int) []string {
+	neighborhood := make([]string, 0)
+
+	if d == 0 {
+		neighborhood = append(neighborhood, Pattern)
+		return neighborhood
 	}
 
-	for i := 1; i < len(pattern); i++ {
-		letter := pattern[i]
+	if len(Pattern) == 1 {
+		neighborhood = append(neighborhood, []string{"A", "C", "G", "T"}...) //it seems like i've got this notation down now!
+		return neighborhood
+	}
 
-		stringedLetter := string(letter)
+	SuffixNeighbors := Neighbors(Suffix(Pattern), d)
 
-		nucleotides := Nucleotides()
+	nucleotides := Nucleotides()
 
-		for i, val := range nucleotides {
-			if stringedLetter == val {
-				nucleotides = nucleotides[:1] + nucleotides[i+1:]
+	for _, text := range SuffixNeighbors {
+		if HammingDist(Suffix(Pattern), text) < d {
+			for _, nucleotide := range nucleotides {
+				neighborhood = append(neighborhood, nucleotide+text) //idk if this is the prettiest way to do it, but if it works, it works. --> this adds a,g,c,t with each possible variation of suffixes at each length
 			}
+		} else {
+			neighborhood = append(neighborhood, string(Pattern[0])+text)
 		}
-
 	}
 
-	return []string{}
-}
-
-//This one is the simplest one! Let's do it first!
-func PrefixRandomizedNeighbors(Pattern string) []string {
-	neigbors := make([]string, 4)
-
-	suffix := Suffix(Pattern)
-	//Generate random prefixes!
-	prefixes := Nucleotides()
-
-	for i := 0; i < 4; i++ {
-		neigbors[i] = prefixes[i] + suffix
-	}
-
-	return neigbors
+	return neighborhood
 }
 
 func Suffix(Pattern string) string {

@@ -32,7 +32,16 @@ func main() {
 	// utils.WriteBytesToTxTFile("/files/intro.txt", data)
 	// fmt.Println(utils.AddSpacesToString(string(data)))
 	// WriteGCSkewFULL()
-	fmt.Println(ApproxMatching("CGATCGAGTACCATAAG", "ATA", 1))
+	// fmt.Println(ApproxMatching("CGATCGAGTACCATAAG", "ATA", 1))
+
+	Text := "AATTAATTGGTAGGTAGGTA"
+	k := 4
+	d := 0
+
+	fmt.Println(FrequentWordsWithMismatches(Text, k, d))
+	fmt.Println(FrequentWordsWithMismatches(ReverseComplement(Text), k, d))
+	fmt.Println(FrequentWordsMismatchesReverseComplements(Text, k, d))
+	// fmt.Println(ReverseComplement("AATT"))
 }
 
 //Take Vibrio cholerae genome from os and print list of starting indices of any matches in a space separated list

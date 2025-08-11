@@ -113,3 +113,7 @@ func generate1mer() []byte {
 	}
 	return []byte(letter)
 }
+
+//now, this looks like something that should / could be optimized a lot more? I am just not sure how, at the current moment anyways. However, it has been running for quite the while now, and still hasn't stopped!
+
+//I would say that it has been running for hours, officially! so i will definitely be trying to lower the number of simulations that I am forcing it to do and see if there is a better way to do it at some point.

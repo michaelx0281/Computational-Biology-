@@ -7,7 +7,8 @@ import (
 
 func main() {
 	fmt.Println("Welcome to Module 2.")
-	ExerciseOne()
+	// ExerciseOne()
+	fmt.Println(MotifEnumeration2([]string{"ATTTGGC", "TGCCTTA", "CGGTATC", "GAAAATT"}, 3, 1))
 }
 
 //Exercise 1

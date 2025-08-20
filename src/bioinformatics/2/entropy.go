@@ -1,5 +1,9 @@
 package main
 
+//note that nothing here in this document is tested yet, this will just serve as more of a intro / personal project for now!
+
+//There are a bunch of other things that I really want to put more focus on at the current moment so this stuff would probably have to wait until later!
+
 import "math"
 
 type col [4]float64

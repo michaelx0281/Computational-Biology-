@@ -6,9 +6,14 @@ import (
 )
 
 func main() {
-	fmt.Println("Welcome to Module 2.")
-	// ExerciseOne()
-	fmt.Println(MotifEnumeration2([]string{"ATTTGGC", "TGCCTTA", "CGGTATC", "GAAAATT"}, 3, 1))
+	// fmt.Println("Welcome to Module 2.")
+	// // ExerciseOne()
+	// fmt.Println(MotifEnumeration2([]string{"ATTTGGC", "TGCCTTA", "CGGTATC", "GAAAATT"}, 3, 1))
+	ProfileMostProbableKmer("ACCTGTTTATTGCCTAAGTTCCGAACAAACCCAATATAGCCCGAGGGCCT", 5, [4][]float64{
+		{0.2, 0.2, 0.3, 0.2, 0.3},
+		{0.4, 0.3, 0.1, 0.5, 0.1},
+		{0.3, 0.3, 0.5, 0.2, 0.4},
+		{0.1, 0.2, 0.1, 0.1, 0.2}})
 }
 
 //Exercise 1

@@ -87,3 +87,65 @@ GreedyMotifSearch(Dna, k, t)
             BestMotifs ← Motifs
     return BestMotifs
 */
+//t = number of strings in Dna //assume standard to be ACGT
+func GreedyMotifSearch(Dna []string, k, t int) []string {
+	BestMotifs := GenerateVertMotifs(Dna, t)
+
+	//horizontal motifs of first string
+	n := len(Dna[0])
+	for i := 0; i < n-k+1; i++ {
+		//set to zero, because only want to check first strand only against the others
+		motif := Dna[0][i:i+k]
+
+		Motif := make([]string, 1)
+		Motif[0] = motif 
+
+		for j := 1; j < t+1; j++ {
+			profile := ProfileMatrix(releaseMotifs(Motif)) //this is really weird and idk if this is the greatest idea
+			Motif = append(Motif, ProfileMostProbableKmer(Dna[j], k, profile))
+		}
+		motifs := Motif
+
+		if dSummation()
+	}
+	
+	return []string{}
+}
+//entropy is still experimental (aka i don't really want to test or touch it rn) --> lets make a smaller but simpler function creating profiles
+
+func releaseMotifs(Motif []string) (...string) {
+	return Motif
+}
+
+func ProfileMatrix(Dna ...string) [4][]float64 {
+	n := len(Dna)
+
+	if n == 1 {
+
+	}
+}
+
+//returns stuff in ACGT formatting
+func CountNucleotides(Text string) []int {
+	a := 0
+	c := 0 
+	g := 0
+	t := 0
+	for i := 0; i < len(Text); i++ {
+		n := byte(Text[i])
+
+		switch n {
+		case 'A':
+			a++
+		
+		case 'C':
+			c++
+		case 'G':
+			g++
+		case 'T':
+			g++
+		}
+	}
+
+	return []int{a,c,g,t}
+}

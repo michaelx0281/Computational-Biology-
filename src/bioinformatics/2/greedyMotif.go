@@ -89,46 +89,109 @@ GreedyMotifSearch(Dna, k, t)
 */
 //t = number of strings in Dna //assume standard to be ACGT
 func GreedyMotifSearch(Dna []string, k, t int) []string {
-	BestMotifs := GenerateVertMotifs(Dna, t)
+	BestMotifs := GenerateVertMotifs(Dna, k, t)
 
 	//horizontal motifs of first string
 	n := len(Dna[0])
 	for i := 0; i < n-k+1; i++ {
 		//set to zero, because only want to check first strand only against the others
-		motif := Dna[0][i:i+k]
+		motif := Dna[0][i : i+k]
 
 		Motif := make([]string, 1)
-		Motif[0] = motif 
+		Motif[0] = motif
 
-		for j := 1; j < t+1; j++ {
-			profile := ProfileMatrix(releaseMotifs(Motif)) //this is really weird and idk if this is the greatest idea
+		for j := 1; j < t+1; j++ { //there may be an error over here? i am not sure about why the bounds are why they are, but this may need some fixing in the future
+			profile := ProfileMtx(Motif) //this is really weird and idk if this is the greatest idea
 			Motif = append(Motif, ProfileMostProbableKmer(Dna[j], k, profile))
 		}
-		motifs := Motif
 
-		if dSummation()
+		if ScoreDistributionMtx(Motif) < ScoreDistributionMtx(BestMotifs) {
+			BestMotifs = Motif
+		}
 	}
-	
-	return []string{}
+
+	return BestMotifs
 }
+
 //entropy is still experimental (aka i don't really want to test or touch it rn) --> lets make a smaller but simpler function creating profiles
 
-func releaseMotifs(Motif []string) (...string) {
-	return Motif
+func ScoreDistributionMtx(matrix []string) int {
+	n := len(matrix[0])
+
+	score := 0
+
+	for i := 0; i < n; i++ {
+		score += ScoreCol([]byte{matrix[i][0], matrix[i][1], matrix[i][2], matrix[i][3]})
+	}
+
+	return score
 }
 
-func ProfileMatrix(Dna ...string) [4][]float64 {
-	n := len(Dna)
-
-	if n == 1 {
-
+func ScoreCol(col []byte) int {
+	//check if all of them are the same
+	if col[0] == col[1] && col[1] == col[2] && col[2] == col[3] {
+		return 0
+	} else {
+		return HammingDist(string(col[0]), string(col[1])) + //this is perhaps one of the ugly-est things i have ever typed out?
+			HammingDist(string(col[1]), string(col[2])) +
+			HammingDist(string(col[2]), string(col[3])) +
+			HammingDist(string(col[3]), string(col[0]))
 	}
+}
+
+func ProfileMtx(Dna []string) [4][]float64 {
+	n := len(Dna[0])
+	sum := 0
+
+	profile := [4]float64{0.0, 0.0, 0.0, 0.0}
+
+	for _, strand := range Dna {
+		temp := rowCount(strand)
+
+		//append to the permanent list
+		for i, float := range temp {
+			profile[i] += float
+		}
+	}
+
+	t := float64(len(Dna))
+
+	for i := range profile {
+		profile[i] /= t
+	}
+
+	return profile
+}
+
+func rowCount(row string) [4]float64 { //fix row count over here, because it seems like we got the wrong idea about the approach
+	n := len(row)
+	a := 0.0
+	c := 0.0
+	g := 0.0
+	t := 0.0
+
+	for i := 0; i < n; i++ {
+		symbol := byte(row[i])
+
+		switch symbol {
+		case 'A':
+			a++
+		case 'C':
+			c++
+		case 'G':
+			g++
+		case 'T':
+			t++
+		}
+	}
+
+	return [4]float64{a, c, g, t}
 }
 
 //returns stuff in ACGT formatting
 func CountNucleotides(Text string) []int {
 	a := 0
-	c := 0 
+	c := 0
 	g := 0
 	t := 0
 	for i := 0; i < len(Text); i++ {
@@ -137,7 +200,7 @@ func CountNucleotides(Text string) []int {
 		switch n {
 		case 'A':
 			a++
-		
+
 		case 'C':
 			c++
 		case 'G':
@@ -147,5 +210,15 @@ func CountNucleotides(Text string) []int {
 		}
 	}
 
-	return []int{a,c,g,t}
+	return []int{a, c, g, t}
+}
+
+func GenerateVertMotifs(Dna []string, k, t int) []string {
+	list := make([]string, t)
+
+	for i := 0; i < t; i++ {
+		list[i] = Dna[i][0:k]
+	}
+
+	return list
 }

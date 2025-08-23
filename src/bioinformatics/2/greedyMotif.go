@@ -2,6 +2,8 @@ package main
 
 // import "fmt"
 
+import "fmt"
+
 /*
 	This is supposed to exemplify the Greedy Motif Search.
 
@@ -31,12 +33,40 @@ func ProfileMostProbableKmer(Text string, k int, Profile [4][]float64) string {
 			s := byte(symbol)
 			switch s {
 			case 'A':
+				if Profile[0][j] == 0 {
+					distribution[j] = 0.01
+					break
+				} else if Profile[0][j] == 1 {
+					distribution[j] = 0.99
+					break
+				}
 				distribution[j] = Profile[0][j]
 			case 'C':
+				if Profile[1][j] == 0 {
+					distribution[j] = 0.01
+					break
+				} else if Profile[1][j] == 1 {
+					distribution[j] = 0.99
+					break
+				}
 				distribution[j] = Profile[1][j]
 			case 'G':
+				if Profile[2][j] == 0 {
+					distribution[j] = 0.01
+					break
+				} else if Profile[2][j] == 1 {
+					distribution[j] = 0.99
+					break
+				}
 				distribution[j] = Profile[2][j]
 			case 'T':
+				if Profile[3][j] == 0 {
+					distribution[j] = 0.01
+					break
+				} else if Profile[3][j] == 1 {
+					distribution[j] = 0.99
+					break
+				}
 				distribution[j] = Profile[3][j]
 			}
 		}
@@ -100,8 +130,11 @@ func GreedyMotifSearch(Dna []string, k, t int) []string {
 		Motif := make([]string, 1)
 		Motif[0] = motif
 
-		for j := 1; j < t+1; j++ { //there may be an error over here? i am not sure about why the bounds are why they are, but this may need some fixing in the future
+		for j := 1; j < t; j++ { //there may be an error over here? i am not sure about why the bounds are why they are, but this may need some fixing in the future
+			// fmt.Println(Motif)
+			// fmt.Println(Dna[j])
 			profile := ProfileMtx(Motif) //this is really weird and idk if this is the greatest idea
+			fmt.Println(t, j)
 			Motif = append(Motif, ProfileMostProbableKmer(Dna[j], k, profile))
 		}
 
@@ -115,13 +148,14 @@ func GreedyMotifSearch(Dna []string, k, t int) []string {
 
 //entropy is still experimental (aka i don't really want to test or touch it rn) --> lets make a smaller but simpler function creating profiles
 
-func ScoreDistributionMtx(matrix []string) int {
+//should test next
+func ScoreDistributionMtx(matrix []string) int { //it seems like to me, that I have been doing this wrong.. Need to revise to better fit the problem. Take the largest value out of each col, and multiply them all together
 	n := len(matrix[0])
 
 	score := 0
 
 	for i := 0; i < n; i++ {
-		score += ScoreCol([]byte{matrix[i][0], matrix[i][1], matrix[i][2], matrix[i][3]})
+		score += ScoreCol([]byte{matrix[0][i], matrix[1][i], matrix[2][i], matrix[3][i]})
 	}
 
 	return score
@@ -139,53 +173,44 @@ func ScoreCol(col []byte) int {
 	}
 }
 
-func ProfileMtx(Dna []string) [4][]float64 {
+//TESTED
+func ProfileMtx(Dna []string) [4][]float64 { //i should test this out individually to see how well it works
 	n := len(Dna[0])
-	sum := 0
+	t := len(Dna)
 
-	profile := [4]float64{0.0, 0.0, 0.0, 0.0}
-
-	for _, strand := range Dna {
-		temp := rowCount(strand)
-
-		//append to the permanent list
-		for i, float := range temp {
-			profile[i] += float
-		}
-	}
-
-	t := float64(len(Dna))
+	profile := make([][]float64, 4)
 
 	for i := range profile {
-		profile[i] /= t
+		profile[i] = make([]float64, n)
 	}
 
-	return profile
-}
+	//iterate horizontally
+	for col := 0; col < n; col++ {
+		//generate a list of all nucleotides in current col
+		list := make([]byte, t)
+		for row := 0; row < t; row++ {
+			list[row] = byte(Dna[row][col])
+		}
 
-func rowCount(row string) [4]float64 { //fix row count over here, because it seems like we got the wrong idea about the approach
-	n := len(row)
-	a := 0.0
-	c := 0.0
-	g := 0.0
-	t := 0.0
-
-	for i := 0; i < n; i++ {
-		symbol := byte(row[i])
-
-		switch symbol {
-		case 'A':
-			a++
-		case 'C':
-			c++
-		case 'G':
-			g++
-		case 'T':
-			t++
+		for j := 0; j < 4; j++ {
+			profile[j][col] = colCount(list)[j]
 		}
 	}
 
-	return [4]float64{a, c, g, t}
+	return [4][]float64(profile)
+}
+
+func colCount(col []byte) [4]float64 { //hopefully this would work now?
+	t := float64(len(col)) //this the the amount of rows to cover in the distribution
+	list := CountNucleotides(string(col))
+
+	newList := make([]float64, 4)
+
+	for i := range list {
+		newList[i] = float64(list[i]) / t
+	}
+
+	return [4]float64(newList)
 }
 
 //returns stuff in ACGT formatting
@@ -200,7 +225,6 @@ func CountNucleotides(Text string) []int {
 		switch n {
 		case 'A':
 			a++
-
 		case 'C':
 			c++
 		case 'G':

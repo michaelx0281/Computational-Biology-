@@ -29,8 +29,8 @@ func (f fcgi) Assemble() string {
 	url = append(url, []byte(f.db.String())...)
 	url = append(url, []byte(f.term.URLSyntax())...) //maybe i should have a separate group of functions that returns in []byte instead to make it easier
 	url = append(url, []byte(string(f.tool))...)
-	url = append(url, []byte(string(f.email))...)
-
+	url = append(url, []byte(string(f.email))...) //appending so much is probably not very efficient, should look into a better way of doing this some other time
+	//other than the repetitiveness of everything, even if it seems like it is a little bit unecessary, I quite like the way that this is structured overall!
 	return string(url)
 }
 
@@ -76,12 +76,22 @@ type Function int
 const (
 	ESearch Function = iota + 1
 	ESummary
+	EFetch
+	EgQuery
+	Elink
+	Einfo
+	EPost //I don't really see my usages extending past this
 )
 
 func (f Function) String() string {
 	return [...]string{
 		"esearch.fcgi?",
-		"esummary.fcgi?"}[f-1]
+		"esummary.fcgi?",
+		"efetch.fcgi?",
+		"egquery.fcgi?",
+		"elink.fcgi?",
+		"einfo.fcgi?",
+		"epost.fcgi?"}[f-1]
 }
 
 /* Terms */
@@ -113,7 +123,13 @@ func SpliceInsert(Text string) string { //might need to add percent encoding, bu
 
 func Fcgi(f Function, db Database, t Term) fcgi {
 
-	entrez := fcgi{base_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/", db: db, function: f, term: t, tool: tool, email: personal}
+	entrez := fcgi{
+		base_url: "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
+		db:       db,
+		function: f,
+		term:     t,
+		tool:     tool,
+		email:    personal}
 
 	return entrez
 }

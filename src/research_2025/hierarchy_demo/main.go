@@ -10,6 +10,7 @@ func main() {
 	Parent("hello_world/one")
 
 	ParentChild("example_one", "child_two", "child_three")
+
 }
 
 // Step One: Make a singular parent folder
@@ -26,3 +27,5 @@ func ParentChild(name string, children ...string) {
 //This is relatively simple to use...make sure to adhere to this style in the future as well for all of the data/record files
 
 //as for creating the respective Go types for each of the data info that I would like to collect, that seems like a little bit of a pain...but lets do that soon as well
+
+//I might want to consider creating status messages / codes as well --> but that is mostly for the future

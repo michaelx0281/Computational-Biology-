@@ -20,6 +20,7 @@ func main() {
 	// check(err3)
 	// fmt.Println(ReverseComplement(string(y)))
 	// fmt.Println(WascallyWabbits(5, 3))
+	utils
 }
 
 func ACGTCount(s string) (int, int, int, int) {

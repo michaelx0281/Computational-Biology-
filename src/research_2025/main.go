@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	. "research2025/eutils" //the dot makes it so that i don't need to prefix everything with 'eutil'
+
+	. "github.com/michaelx0281/Computational-Biology/src/research_2025/eutils" //dealing with submodules is such a pain...look to do it later if you want..the github submodule already took me substantial time, don't want to do the same for go modules any honestly
 )
 
 func main() {

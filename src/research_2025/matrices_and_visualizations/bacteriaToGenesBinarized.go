@@ -72,9 +72,52 @@ eutilities@ncbi.nlm.nih.gov
 */
 
 func BacteriaToGenesBinarized(x Axis, y Axis) map[string]bool {
-	hashTable := make(map[string]bool)
 
-	return hashTable
+	/*
+		Notes of implementation.
+
+		TODO: change map[string]bool to something closer to map[string, string]bool ==> probably using a struct(string, string) as fields
+
+		One of the goals: make as few queries as possible.
+
+		1) Generate list of all necessary UIDs of each organism
+
+		--> The UIDs for each probiotic of interest would be different across different databases
+
+		Try: UIDs of listed probiotics from research paper on research2025 google doc --> ESearch on Taxonomy with usehistory=y (grab the key and webenv) -->
+			--> ELink (would prefer [Category][taxon][gene] in terms of hierarchy for writing (figure it out!))
+				(
+					Priority:
+						Gene
+					Sidebar:
+						Nuccore(dna, rna, mrna)
+						Protein(proteomics)
+
+				)
+			--> make function that:
+					Generate list of top 20-50 most popular genes (extend as needed with the size of the dataset)
+					--> BONUS: visualize
+
+					PRIORITY:
+					Make matrix of probiotics vs genes
+					--> multiple matches associated to better colors, I suppose
+
+					make a bucket list of colors
+
+					can try to use assembly or some other annotated gene database to make further generalizations of the specificity of usage in relation to immune --> other benefits
+
+					(might need to learn some R visualizaiton techniques for this)
+
+					Make matrix of probiotics vs extended list of genes (retrieve using Assembly-->SIDEBAR)
+
+			--> narrow down to 5-10% list in terms of strains / organisms of interest (do the 2-5 first and use clustalomega to perform quality control tests and whatnot, then build off of it) --> at this point, look back at the document and try to follow the instructions strictly
+
+		Probio and Probio-ichnos --> look at these databases which are specifically curated towards probiotics
+
+
+	*/
+
+	return make(map[string]bool)
 }
 
 /*

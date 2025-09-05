@@ -59,6 +59,48 @@ func ParseGeneRecord(url string) map[string]string {
 	return GeneTable
 }
 
+/*
+	The intent of the below function is to provide a map[uid]term so that the UIDs could later be fed to ESummary or EFetch.
+
+	It may be better to use the query key and env in some cases; however, I still need a function that would properly map each key to something more of significance to me once graphed
+*/
+
+//next step for these, would be to write the `xml:xxx` tags for each so that the decoder knows which fields to associate with which Go struct
+
+type Query struct {
+	list []Identifier
+}
+
+type Identifier struct {
+	id   UID
+	name taxon
+}
+
+type taxon string
+type UID int
+
+func ParseSearchUIDToTerm(url string) map[int]string {
+	resp, err := http.Get(url)
+
+	utils.HandleErrorLog(err, "Http req. failed") //now with multiple of them, I needt to be able to better identify which function failed. I can include a status code and have a function that could interpret status codes in order to return relevant infomration about what specifically failed --> but this would probablywait for later. Project for after all of the essentials are done.
+
+	defer resp.Body.Close()
+
+	//define a pointer to a storage object, and feed the memory address to the decoder
+
+	var q Query
+	err2 := xml.NewDecoder(resp.Body).Decode(&q)
+	utils.HandleErrorLog(err2, "Trouhle with decoding...")
+
+	id := make(map[int]string)
+
+	for _, orgn := range q.list {
+		id[int(orgn.id)] = string(orgn.name)
+	}
+
+	return id
+}
+
 // func GenerateNeighborhoods() {
 
 // }

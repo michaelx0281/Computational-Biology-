@@ -11,6 +11,8 @@ func main() {
 
 	ParentChild("example_one", "child_two", "child_three")
 
+	Write("names/michaela.txt", []byte("ex_1:val_1, ex_2:val_2"))
+
 }
 
 // Step One: Make a singular parent folder
@@ -23,6 +25,10 @@ func ParentChild(name string, children ...string) {
 		os.MkdirAll(name+"/"+child, 0o755)
 	}
 } //okay! this works too! Beautiful!!
+
+func Write(path string, data []byte) { //can only write to existing folders and etc
+	os.WriteFile(path, data, 0o755)
+}
 
 //This is relatively simple to use...make sure to adhere to this style in the future as well for all of the data/record files
 

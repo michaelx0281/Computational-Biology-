@@ -79,7 +79,7 @@ type Query struct {
 }
 
 type Termset struct {
-	Set []Term `xml:"Termset"`
+	Set []Term `xml:"TermSet"`
 }
 
 type Term struct {

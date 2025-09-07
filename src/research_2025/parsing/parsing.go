@@ -2,6 +2,7 @@ package parsing
 
 import (
 	"encoding/xml"
+	"fmt"
 	"net/http"
 
 	"github.com/michaelx0281/Computational-Biology/src/utils"
@@ -67,19 +68,45 @@ func ParseGeneRecord(url string) map[string]string {
 
 //next step for these, would be to write the `xml:xxx` tags for each so that the decoder knows which fields to associate with which Go struct
 
+//for all future reference, mirror the raw xml (don't make things more complicated for yourself)
+
 type Query struct {
-	list []Identifier
+	XMLName xml.Name `xml:"eSearchResult"` //this would define the root
+	Raw     string   `xml:",innerxml"`
+	Ids     []ID     `xml:"IdList>Id"`
+	Names   Termset  `xml:"TranslationStack"` //note: found out that the termsets are not matched with ids --> for more documentation, do some post processing, but make the Matrix with uids at first
+	// Hits 	[]string 	`xml:TransltionStack>Termset>Term`
 }
 
-type Identifier struct {
-	id   UID
-	name taxon
+type Termset struct {
+	Set []Term `xml:"Termset"`
 }
 
-type taxon string
-type UID int
+type Term struct {
+	Name TaxonName `xml:"Term"`
+}
 
-func ParseSearchUIDToTerm(url string) map[int]string {
+// type ID struct {
+// 	Id string `xml:"Id"`
+// }
+
+// type Name struct {
+// 	Name string `xml:"TranslationStack>Termset>Term"`
+// 	Hits string `xml:"TranslationStack>Termset>Count"`
+// }
+
+// type Identifier struct { //there are multiple of each field, I am honestly unsure about how this formatting woud work out
+// 	Id   string `xml:"Idlist>Id"`
+// 	Name string `xml:"TranslationStack>TermSet>Term"` //make sure all of the fields are Uppercase to marshall it
+// }
+
+// type taxon string //should I define the above to be strings for it to work better?
+// type UID int
+
+type ID string
+type TaxonName string
+
+func parseSearchUID(url string) ([]ID, Termset) {
 	resp, err := http.Get(url)
 
 	utils.HandleErrorLog(err, "Http req. failed") //now with multiple of them, I needt to be able to better identify which function failed. I can include a status code and have a function that could interpret status codes in order to return relevant infomration about what specifically failed --> but this would probablywait for later. Project for after all of the essentials are done.
@@ -90,15 +117,41 @@ func ParseSearchUIDToTerm(url string) map[int]string {
 
 	var q Query
 	err2 := xml.NewDecoder(resp.Body).Decode(&q)
-	utils.HandleErrorLog(err2, "Trouhle with decoding...")
+	utils.HandleErrorLog(err2, "Trouble with decoding...")
 
-	id := make(map[int]string)
+	// fmt.Println("List:", ) //see what this output is ??
+	// // fmt.Println("Raw: ", q.Raw)
+	// fmt.Println("Root: ", q.XMLName.Local)
 
-	for _, orgn := range q.list {
-		id[int(orgn.id)] = string(orgn.name)
+	termSet := q.Names
+
+	fmt.Println("TermSet:", termSet)
+	fmt.Println("IDSet:", q.Ids)
+
+	return q.Ids, q.Names
+}
+
+type Taxon_v_ID struct {
+	id         []ID
+	taxon_name []TaxonName
+}
+
+func (t Taxon_v_ID) create(id []ID, termset Termset) Taxon_v_ID {
+
+	names := make([]TaxonName, len(termset.Set))
+
+	for i, term := range termset.Set {
+		names[i] = term.Name
 	}
 
-	return id
+	t.id = id
+	t.taxon_name = names
+	return t
+}
+
+func ParseSearchUID(url string) Taxon_v_ID {
+	id, name := parseSearchUID(url)
+	return Taxon_v_ID{}.create(id, name)
 }
 
 // func GenerateNeighborhoods() {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	. "github.com/michaelx0281/Computational-Biology/src/research_2025/eutils" //dealing with submodules is such a pain...look to do it later if you want..the github submodule already took me substantial time, don't want to do the same for go modules any honestly
+	"github.com/michaelx0281/Computational-Biology/src/research_2025/parsing"
 )
 
 func main() {
@@ -63,6 +64,38 @@ func main() {
 		"Clostridium butyricum",
 		"Escherichia coli",
 	))
+
+	// id := make(map[int]string)
+
+	result := parsing.ParseSearchUID(SearchTaxonUIDExample(
+		"Bacillus mesentericus",
+		"Bacillus subtilis",
+		"Bacillus velezensis",
+		"Bifidobacterium animalis DN-173 010",
+		"Bifidobacterium animalis",
+		"Bifidobacterium animalis NumRes252/-253",
+		"Bifidobacterium animalis subsp. Lactis",
+		"Bifidobacterium bifidum",
+		"Bifidobacterium breve",
+		"Bifidobacterium breve IPLA 20004",
+		"Bifidobacterium breve M-16V",
+		"Bifidobacterium breve AH1205",
+		"Bifidobacterium breve UCC2003",
+		"Bifidobacterium bifidum MIMBb23sg",
+		"Bifidobacterium bifidum LMG13195",
+		"Bifidobacterium lactis HN019",
+		"Bifidobacterium longum",
+		"Bifidobacterium longum",
+		"Bifidobacterium longum AH1206",
+		"Bifidobacterium infantis NumRes251",
+		"Bifdobacterium infantis",
+		"Clostridium butyricum",
+		"Escherichia coli",
+	))
+
+	fmt.Print("Result:", result)
+
+	// fmt.Println(id)
 }
 
 func TaxonToGene(Terms ...string) {
@@ -120,3 +153,8 @@ func CommaSeparatedString(strings ...string) string {
 
 	return string(result)
 }
+
+/* Lets make it even more streamlined */
+
+// make a bunch of helper functions for anything that would appear commonly used here
+// you can then compose them together for larger projects and etc --> just be sure that you have tested everything quite thoroughly!!
